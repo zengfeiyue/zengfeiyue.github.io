@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Center - HealthScan</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 40px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            min-height: 80vh; /* Ensure container has height for loading indicator */
+        }
+        .loading-state {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            font-size: 18px;
+            color: #888;
+        }
+        /* Styles for the fetched content */
+        h1, h2, h3 { color: #222; }
+        h1 { font-size: 28px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        h2 { font-size: 22px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+        strong { color: #111; }
+        address { font-style: normal; background-color: #f8f8f8; border-left: 4px solid #ccc; padding: 15px; margin: 20px 0; }
+        .table-of-contents ol { padding-left: 20px; }
+        .table-of-contents li { margin-bottom: 5px; }
+        .table-of-contents a { text-decoration: none; color: #007bff; }
+        .table-of-contents a:hover { text-decoration: underline; }
+
+        /* Floating Language Switcher */
+        .language-switcher {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1000;
+            background-color: white;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+        .lang-btn {
+            padding: 10px 20px;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #555;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .lang-btn.active {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- This is the container where content will be dynamically loaded -->
+    <div id="content-container" class="container">
+        <div class="loading-state">Loading...</div>
+    </div>
+
+    <!-- Floating Language Switcher -->
+    <div class="language-switcher">
+        <button id="btn-en" class="lang-btn active" onclick="switchLanguage('en')">English</button>
+        <button id="btn-zh" class="lang-btn" onclick="switchLanguage('zh')">简体中文</button>
+    </div>
+
+    <script>
+        // Store the file names in an object for easy access
+        const legalFiles = {
+            privacy: {
+                en: 'privacy-policy-en.html',
+                zh: 'privacy-policy-zh.html'
+            },
+            terms: {
+                en: 'terms-of-service-en.html',
+                zh: 'terms-of-service-zh.html'
+            }
+        };
+
+        // Function to fetch and display content
+        async function loadContent(lang) {
+            const container = document.getElementById('content-container');
+            container.innerHTML = '<div class="loading-state">Loading...</div>'; // Show loading indicator
+
+            try {
+                // Fetch both privacy and terms files for the selected language
+                const privacyResponse = await fetch(legalFiles.privacy[lang]);
+                const termsResponse = await fetch(legalFiles.terms[lang]);
+
+                if (!privacyResponse.ok || !termsResponse.ok) {
+                    throw new Error('Failed to load legal documents.');
+                }
+
+                const privacyHtml = await privacyResponse.text();
+                const termsHtml = await termsResponse.text();
+
+                // Inject the full HTML content into the container
+                // We assume the fetched files are full HTML documents, and we extract their body content.
+                const privacyBody = privacyHtml.match(/<body[^>]*>([\s\S]*)<\/body>/i)[1];
+                const termsBody = termsHtml.match(/<body[^>]*>([\s\S]*)<\/body>/i)[1];
+                
+                container.innerHTML = privacyBody + termsBody;
+
+            } catch (error) {
+                console.error('Error loading content:', error);
+                container.innerHTML = '<div class="loading-state">Failed to load content. Please try again later.</div>';
+            }
+        }
+
+        // Function to handle language switching
+        function switchLanguage(lang) {
+            // Update the active state on buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + lang).classList.add('active');
+            
+            // Update the lang attribute of the html tag
+            document.documentElement.lang = (lang === 'zh') ? 'zh-CN' : 'en';
+
+            // Load the new content
+            loadContent(lang);
+        }
+        
+        // Initial load when the page is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Default to English
+            switchLanguage('en');
+        });
+    </script>
+
+</body>
+</html>
