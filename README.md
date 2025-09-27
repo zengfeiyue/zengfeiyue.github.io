@@ -32,6 +32,6 @@ Here are some of the technologies I'm proficient in:
 **📫 Get In Touch**
 
 -   **Email:** [zengfeiyue2@gmail.com](mailto:zengfeiyue2@gmail.com)
--   **github:**  [https://github.com/zengfeiyue]
+-   **github:**  [github-profile]: https://github.com/zengfeiyue "曾飞跃的 GitHub"
 
 <br>
