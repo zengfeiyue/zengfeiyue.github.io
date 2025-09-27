@@ -35,5 +35,3 @@ Here are some of the technologies I'm proficient in:
 -   **github:**  https://github.com/zengfeiyue
 
 <br>
-
->*This profile serves to provide verification for my Google Play Developer account application.*
