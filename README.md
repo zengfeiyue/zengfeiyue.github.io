@@ -32,7 +32,6 @@ Here are some of the technologies I'm proficient in:
 **📫 Get In Touch**
 
 -   **Email:** [zengfeiyue2@gmail.com](mailto:zengfeiyue2@gmail.com)
--   **LinkedIn:** [Your LinkedIn Profile URL]  <!-- ✨ 请在这里替换成您的领英个人主页链接! -->
 
 <br>
 
