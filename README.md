@@ -1,4 +1,4 @@
-### Hi there 👋, I'm Lai Qiao (曾飞跃)
+### Hi there 👋, I'm Lai Qiao(赖巧)
 
 I am a passionate and versatile Full-Stack Developer with a strong background in Java backend systems and a love for creating intuitive mobile experiences with Flutter. My goal is to leverage technology to build meaningful applications that solve real-world problems.
 
