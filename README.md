@@ -1,4 +1,4 @@
-### Hi there 👋, I'm Feiyue Zeng (曾飞跃)
+### Hi there 👋, I'm Lai Qiao (曾飞跃)
 
 I am a passionate and versatile Full-Stack Developer with a strong background in Java backend systems and a love for creating intuitive mobile experiences with Flutter. My goal is to leverage technology to build meaningful applications that solve real-world problems.
 
@@ -31,7 +31,7 @@ Here are some of the technologies I'm proficient in:
 
 **📫 Get In Touch**
 
--  **Email:** [zengfeiyue2@gmail.com](mailto:zengfeiyue2@gmail.com)
+-  **Email:** [quaintlq@icloud.com](mailto:quaintlq@icloud.com)
 -  **GitHub:** [https://github.com/zengfeiyue](https://github.com/zengfeiyue)
 
 
