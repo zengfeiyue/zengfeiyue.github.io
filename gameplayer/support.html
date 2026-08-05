@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GamePlay 支持与帮助</title>
+    <title>GamePlay App Support / 支持与帮助</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
@@ -32,12 +32,25 @@
             color: #0a7ea8;
         }
 
+        strong {
+            color: #111;
+        }
+
+        .chinese-text {
+            color: #555;
+            font-size: 0.95em;
+        }
+
         .card {
             background: #f7f9fc;
             border: 1px solid #e3e9f2;
             border-radius: 10px;
             padding: 16px 20px;
             margin: 14px 0;
+        }
+
+        .card p {
+            margin-top: 6px;
         }
 
         .back {
@@ -50,47 +63,95 @@
 </head>
 
 <body>
-    <a class="back" href="index.html">← 返回 GamePlay 首页</a>
-    <h1>GamePlay 支持与帮助</h1>
-    <p>欢迎来到 GamePlay 的支持页面。GamePlay 是一款用于电竞反应速度测试的工具，提供反应速度测试与天梯排名等功能。</p>
+    <a class="back" href="index.html">← 返回 GamePlay 首页 / Back to GamePlay</a>
+    <h1>GamePlay App Support / GamePlay 支持与帮助</h1>
+    <p>
+        Welcome to the support page for the GamePlay app, an esports reaction speed testing tool that provides reaction
+        speed tests and ladder ranking features.
+    </p>
+    <p class="chinese-text">
+        欢迎来到 GamePlay 的支持页面。GamePlay 是一款用于电竞反应速度测试的工具，提供反应速度测试与天梯排名等功能。
+    </p>
 
-    <h2>常见问题</h2>
+    <h2>FAQ / 常见问题</h2>
 
     <div class="card">
-        <strong>Q: 如何开始一次反应速度测试？</strong>
-        <p>进入 GamePlay 首页，点击「开始测试」按钮。屏幕变为绿色后，以最快速度点击屏幕即可完成一轮。共 5 轮测试，最终取平均反应时间。</p>
+        <strong>Q: How do I start a reaction speed test?</strong>
+        <p>
+            Go to the GamePlay homepage and click the "Start Test" button. As soon as the screen turns green, click the
+            screen as fast as you can to complete one round. A full test consists of 5 rounds, and the average reaction
+            time is used as your final score.
+        </p>
+        <p class="chinese-text">
+            <strong>Q: 如何开始一次反应速度测试？</strong><br>
+            进入 GamePlay 首页，点击「开始测试」按钮。屏幕变为绿色后，以最快速度点击屏幕即可完成一轮。共 5 轮测试，最终取平均反应时间。
+        </p>
     </div>
 
     <div class="card">
-        <strong>Q: 屏幕变绿前点击了怎么办？</strong>
-        <p>提前点击会被记为一次失败，该轮会自动重试。请务必等待屏幕变绿后再点击，以获得有效成绩。</p>
+        <strong>Q: What happens if I click before the screen turns green?</strong>
+        <p>
+            Clicking too early will be recorded as a failed round, and that round will be retried automatically. Please
+            wait for the screen to turn green before clicking to get a valid result.
+        </p>
+        <p class="chinese-text">
+            <strong>Q: 屏幕变绿前点击了怎么办？</strong><br>
+            提前点击会被记为一次失败，该轮会自动重试。请务必等待屏幕变绿后再点击，以获得有效成绩。
+        </p>
     </div>
 
     <div class="card">
-        <strong>Q: 如何参与天梯排名？</strong>
-        <p>完成测试后，在结果栏输入昵称并点击「提交成绩」，成绩即可进入天梯榜单。榜单根据平均反应时间升序排列，成绩越短排名越靠前。</p>
+        <strong>Q: How do I participate in the ladder ranking?</strong>
+        <p>
+            After completing a test, enter a nickname in the result panel and click "Submit Score". Your score will then
+            be added to the ladder. The ladder is sorted by average reaction time in ascending order — the shorter your
+            time, the higher your rank.
+        </p>
+        <p class="chinese-text">
+            <strong>Q: 如何参与天梯排名？</strong><br>
+            完成测试后，在结果栏输入昵称并点击「提交成绩」，成绩即可进入天梯榜单。榜单根据平均反应时间升序排列，成绩越短排名越靠前。
+        </p>
     </div>
 
     <div class="card">
-        <strong>Q: 天梯排名数据存储在哪里？</strong>
-        <p>目前天梯排名数据存储在您的浏览器本地（localStorage），仅您本人可见。后续版本将支持云端同步与全球排行榜。</p>
+        <strong>Q: Where is the ladder ranking data stored?</strong>
+        <p>
+            Currently, ladder ranking data is stored locally in your browser (localStorage) and is only visible to you.
+            A future version will support cloud sync and global leaderboards.
+        </p>
+        <p class="chinese-text">
+            <strong>Q: 天梯排名数据存储在哪里？</strong><br>
+            目前天梯排名数据存储在您的浏览器本地（localStorage），仅您本人可见。后续版本将支持云端同步与全球排行榜。
+        </p>
     </div>
 
     <div class="card">
-        <strong>Q: 为什么我的成绩显示为失败？</strong>
-        <p>请确保没有在屏幕变绿前点击，同时建议关闭其他后台程序以减少设备延迟，使用鼠标或触控延迟较低的设备进行测试。</p>
+        <strong>Q: Why is my result showing as failed?</strong>
+        <p>
+            Please make sure you do not click before the screen turns green. Also, close other background programs to
+            reduce device latency, and use a mouse or device with lower input lag for the most accurate results.
+        </p>
+        <p class="chinese-text">
+            <strong>Q: 为什么我的成绩显示为失败？</strong><br>
+            请确保没有在屏幕变绿前点击，同时建议关闭其他后台程序以减少设备延迟，使用鼠标或触控延迟较低的设备进行测试。
+        </p>
     </div>
 
-    <h2>联系我们</h2>
-    <p>如果您有任何问题、反馈或需要帮助，请通过电子邮件联系我们：</p>
+    <h2>Contact Us / 联系我们</h2>
+    <p>
+        If you have any questions, feedback, or need assistance, please feel free to contact us via email:
+    </p>
+    <p class="chinese-text">
+        如果您有任何问题、反馈或需要帮助，请通过电子邮件联系我们：
+    </p>
     <p><strong><a href="mailto:quaintlq@icloud.com">quaintlq@icloud.com</a></strong></p>
 
-    <h2>相关链接</h2>
+    <h2>Related Links / 相关链接</h2>
     <ul>
-        <li><a href="privacy-policy-en.html">隐私政策</a></li>
-        <li><a href="privacy-rights.html">隐私权利中心</a></li>
-        <li><a href="cookie-policy.html">Cookie 政策</a></li>
-        <li><a href="terms-of-service-en.html">服务条款</a></li>
+        <li><a href="privacy-policy-en.html">Privacy Policy / 隐私政策</a></li>
+        <li><a href="privacy-rights.html">Privacy Rights Center / 隐私权利中心</a></li>
+        <li><a href="cookie-policy.html">Cookie Policy / Cookie 政策</a></li>
+        <li><a href="terms-of-service-en.html">Terms of Service / 服务条款</a></li>
     </ul>
 </body>
 
