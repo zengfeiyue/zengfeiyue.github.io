@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamePlay - 电竞反应速度测试</title>
+    <meta name="description" content="GamePlay 是一款用于电竞反应速度测试的工具，提供反应速度测试与天梯排名等功能，帮助你训练并评估自己的竞技反应能力。">
+    <style>
+        :root {
+            --bg: #0a0e17;
+            --bg-2: #111827;
+            --panel: #151d2e;
+            --panel-2: #1c2740;
+            --border: #243149;
+            --text: #e6edf7;
+            --text-dim: #93a4c0;
+            --accent: #00e5ff;
+            --accent-2: #7c4dff;
+            --success: #22d18a;
+            --warn: #ffb347;
+            --danger: #ff4d6d;
+            --radius: 14px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+            background: radial-gradient(1200px 600px at 50% -10%, #16233f 0%, var(--bg) 55%) fixed;
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 24px 20px 60px;
+        }
+
+        /* ===== Header ===== */
+        .hero {
+            text-align: center;
+            padding: 36px 0 28px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .logo .bolt {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #fff;
+            font-size: 26px;
+            box-shadow: 0 0 24px rgba(0, 229, 255, .45);
+        }
+
+        .hero h1 {
+            font-size: 30px;
+        }
+
+        .hero p {
+            color: var(--text-dim);
+            margin-top: 10px;
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ===== Stats bar ===== */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: linear-gradient(180deg, var(--panel), var(--bg-2));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            text-align: center;
+        }
+
+        .stat-card .num {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .stat-card .label {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        /* ===== Main layout ===== */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .card {
+            background: linear-gradient(180deg, var(--panel), var(--bg-2));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card h2 .tag {
+            font-size: 12px;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            padding: 1px 10px;
+        }
+
+        /* ===== Test area ===== */
+        .test-area {
+            position: relative;
+            height: 340px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            transition: background .15s ease;
+            border: 1px solid var(--border);
+        }
+
+        .test-area.waiting {
+            background: #1b2537;
+        }
+
+        .test-area.ready {
+            background: #233d66;
+        }
+
+        .test-area.go {
+            background: linear-gradient(180deg, #0e7a55, #0b6043);
+            box-shadow: inset 0 0 60px rgba(34, 209, 138, .35);
+        }
+
+        .test-area.fail {
+            background: #7a2b3d;
+        }
+
+        .test-area h3 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .test-area p {
+            color: var(--text-dim);
+            max-width: 480px;
+        }
+
+        .test-area .click-hint {
+            margin-top: 14px;
+            font-size: 14px;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+
+        .result-banner {
+            display: none;
+            margin-top: 16px;
+            padding: 16px 18px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--panel-2);
+        }
+
+        .result-banner.show {
+            display: block;
+        }
+
+        .result-banner .row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .result-banner .avg {
+            font-size: 34px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .result-banner .detail {
+            color: var(--text-dim);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .badge.s { background: #ffd70022; color: #ffd700; border: 1px solid #ffd70055; }
+        .badge.a { background: #ff7a4522; color: #ff7a45; border: 1px solid #ff7a4555; }
+        .badge.b { background: #22d18a22; color: var(--success); border: 1px solid #22d18a55; }
+        .badge.c { background: #00e5ff22; color: var(--accent); border: 1px solid #00e5ff55; }
+        .badge.d { background: #93a4c022; color: var(--text-dim); border: 1px solid #93a4c055; }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 11px 22px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .1s ease, box-shadow .15s ease, opacity .15s;
+            font-family: inherit;
+        }
+
+        .btn:active {
+            transform: scale(.97);
+        }
+
+        .btn:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #fff;
+            box-shadow: 0 4px 18px rgba(0, 229, 255, .3);
+        }
+
+        .btn-ghost {
+            background: var(--panel-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .rounds {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .round-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dim);
+        }
+
+        .round-dot.done {
+            background: #22d18a22;
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .round-dot.failed {
+            background: #ff4d6d22;
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .round-dot.active {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ===== Ladder ===== */
+        .tiers {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .tier {
+            border-radius: 10px;
+            padding: 10px 8px;
+            text-align: center;
+            border: 1px solid var(--border);
+            background: var(--panel-2);
+        }
+
+        .tier .t-name {
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .tier .t-range {
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        .ladder-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .ladder-form input {
+            flex: 1;
+            min-width: 160px;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .ladder-form input:focus {
+            border-color: var(--accent);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            padding: 9px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--text-dim);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        tr.me td {
+            background: #00e5ff10;
+        }
+
+        .rank {
+            font-weight: 800;
+        }
+
+        .rank-1 { color: #ffd700; }
+        .rank-2 { color: #c0c8d8; }
+        .rank-3 { color: #cd7f32; }
+
+        .empty {
+            color: var(--text-dim);
+            text-align: center;
+            padding: 26px 0;
+            font-size: 14px;
+        }
+
+        /* ===== Footer links ===== */
+        .legal-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            justify-content: center;
+            margin-top: 44px;
+            padding-top: 22px;
+            border-top: 1px solid var(--border);
+        }
+
+        .legal-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .legal-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-note {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 12px;
+            margin-top: 16px;
+        }
+
+        /* ===== Toast ===== */
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 32px;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--panel-2);
+            border: 1px solid var(--accent);
+            color: var(--text);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s ease, transform .25s ease;
+            z-index: 99;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, .5);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .tiers {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 520px) {
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 12px 8px;
+            }
+
+            .stat-card .num {
+                font-size: 20px;
+            }
+
+            .test-area {
+                height: 280px;
+            }
+
+            .tiers {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="hero">
+            <div class="logo"><span class="bolt">⚡</span>GamePlay</div>
+            <h1>电竞反应速度测试</h1>
+            <p>专业的反应速度测试工具，通过多轮随机延迟测试评估你的竞技反应能力，并在天梯中与全球玩家一较高下。</p>
+        </header>
+
+        <!-- Stats -->
+        <section class="stats">
+            <div class="stat-card">
+                <div class="num" id="statBest">--</div>
+                <div class="label">最佳成绩 (ms)</div>
+            </div>
+            <div class="stat-card">
+                <div class="num" id="statAvg">--</div>
+                <div class="label">平均成绩 (ms)</div>
+            </div>
+            <div class="stat-card">
+                <div class="num" id="statRank">--</div>
+                <div class="label">天梯段位</div>
+            </div>
+        </section>
+
+        <div class="main-grid">
+            <!-- Left: test -->
+            <div>
+                <div class="card">
+                    <h2>反应速度测试 <span class="tag">5 轮取均值</span></h2>
+                    <div class="test-area waiting" id="testArea">
+                        <h3>准备测试</h3>
+                        <p>点击下方「开始测试」，屏幕变绿后以最快速度点击屏幕。</p>
+                        <p class="click-hint">🖱️ 等待绿色出现再点击，提前点击将被判为失败</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn btn-primary" id="btnStart">开始测试</button>
+                        <button class="btn btn-ghost" id="btnReset" disabled>重置</button>
+                    </div>
+                    <div class="rounds" id="rounds"></div>
+                </div>
+
+                <div class="result-banner" id="resultBanner">
+                    <div class="row">
+                        <div>
+                            <div class="avg" id="resultAvg">-- ms</div>
+                            <div class="detail" id="resultDetail"></div>
+                        </div>
+                        <div>
+                            <span class="badge" id="resultBadge">--</span>
+                        </div>
+                    </div>
+                    <div class="ladder-form" style="margin-top:14px;margin-bottom:0;">
+                        <input type="text" id="nickname" maxlength="16" placeholder="输入昵称参与天梯排名" autocomplete="off">
+                        <button class="btn btn-primary" id="btnSubmitScore">提交成绩</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>关于测试</h2>
+                    <ul style="padding-left:20px;color:var(--text-dim);font-size:14px;">
+                        <li>每轮测试前会有 1~4 秒的随机等待时间，屏幕变绿的瞬间开始计时。</li>
+                        <li>提前点击（屏幕仍为红色/蓝色）将被记为一次失败，并自动重试该轮。</li>
+                        <li>共 5 轮有效成绩，最终取平均反应时间；成绩越短，反应越快。</li>
+                        <li>建议使用有鼠标/触控延迟较低的设备，关闭后台任务以获得最准确的结果。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Right: ladder -->
+            <div>
+                <div class="card">
+                    <h2>天梯排名</h2>
+
+                    <div class="tiers">
+                        <div class="tier"><div class="t-name" style="color:#8c9aa8;">青铜</div><div class="t-range">&gt; 380ms</div></div>
+                        <div class="tier"><div class="t-name" style="color:#c8d3dc;">白银</div><div class="t-range">300–380ms</div></div>
+                        <div class="tier"><div class="t-name" style="color:#f0c674;">黄金</div><div class="t-range">250–299ms</div></div>
+                        <div class="tier"><div class="t-name" style="color:#56d364;">铂金</div><div class="t-range">220–249ms</div></div>
+                        <div class="tier"><div class="t-name" style="color:#4dc3ff;">钻石</div><div class="t-range">200–219ms</div></div>
+                        <div class="tier"><div class="t-name" style="color:#a78bfa;">大师</div><div class="t-range">180–199ms</div></div>
+                        <div class="tier"><div class="t-name" style="color:#ff7a45;">宗师</div><div class="t-range">160–179ms</div></div>
+                        <div class="tier"><div class="t-name" style="color:#ffd700;">王者</div><div class="t-range">&lt; 160ms</div></div>
+                    </div>
+
+                    <div class="ladder-form">
+                        <input type="text" id="filterName" placeholder="搜索昵称" autocomplete="off">
+                        <button class="btn btn-ghost" id="btnClearRank">清空本地榜单</button>
+                    </div>
+
+                    <table id="ladderTable">
+                        <thead>
+                            <tr>
+                                <th style="width:56px;">#</th>
+                                <th>昵称</th>
+                                <th>成绩</th>
+                                <th>段位</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ladderBody"></tbody>
+                    </table>
+                    <div class="empty" id="ladderEmpty">暂无成绩，快去完成一次测试吧！</div>
+                </div>
+
+                <div class="card">
+                    <h2>历史成绩</h2>
+                    <canvas id="historyChart" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="legal-links">
+                <a href="support.html">支持与帮助</a>
+                <a href="privacy-policy-en.html">隐私政策</a>
+                <a href="privacy-rights.html">隐私权利中心</a>
+                <a href="cookie-policy.html">Cookie 政策</a>
+                <a href="terms-of-service-en.html">服务条款</a>
+            </div>
+            <p class="footer-note">GamePlay © 2026 · 电竞反应速度测试工具</p>
+        </footer>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        (function () {
+            'use strict';
+
+            // ===== Constants =====
+            var ROUNDS = 5;
+            var STORAGE_KEY = 'gameplay_ladder_v1';
+            var BEST_KEY = 'gameplay_best';
+            var HISTORY_KEY = 'gameplay_history';
+
+            var Tiers = [
+                { name: '王者', max: 160, color: '#ffd700' },
+                { name: '宗师', max: 180, color: '#ff7a45' },
+                { name: '大师', max: 200, color: '#a78bfa' },
+                { name: '钻石', max: 220, color: '#4dc3ff' },
+                { name: '铂金', max: 250, color: '#56d364' },
+                { name: '黄金', max: 300, color: '#f0c674' },
+                { name: '白银', max: 380, color: '#c8d3dc' },
+                { name: '青铜', max: Infinity, color: '#8c9aa8' }
+            ];
+
+            function tierOf(ms) {
+                for (var i = 0; i < Tiers.length; i++) {
+                    if (ms < Tiers[i].max) return Tiers[i];
+                }
+                return Tiers[Tiers.length - 1];
+            }
+
+            function badgeOf(ms) {
+                if (ms <= 180) return { cls: 's', text: 'S · 职业级' };
+                if (ms <= 220) return { cls: 'a', text: 'A · 精英级' };
+                if (ms <= 260) return { cls: 'b', text: 'B · 优秀' };
+                if (ms <= 330) return { cls: 'c', text: 'C · 良好' };
+                return { cls: 'd', text: 'D · 需要练习' };
+            }
+
+            // ===== Storage helpers =====
+            function getLadder() {
+                try {
+                    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                } catch (e) { return []; }
+            }
+
+            function saveLadder(list) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+            }
+
+            function getHistory() {
+                try {
+                    return JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+                } catch (e) { return []; }
+            }
+
+            function saveHistory(list) {
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(-30)));
+            }
+
+            // ===== DOM =====
+            var testArea = document.getElementById('testArea');
+            var btnStart = document.getElementById('btnStart');
+            var btnReset = document.getElementById('btnReset');
+            var roundsEl = document.getElementById('rounds');
+            var resultBanner = document.getElementById('resultBanner');
+            var resultAvg = document.getElementById('resultAvg');
+            var resultDetail = document.getElementById('resultDetail');
+            var resultBadge = document.getElementById('resultBadge');
+            var nickname = document.getElementById('nickname');
+            var btnSubmit = document.getElementById('btnSubmitScore');
+            var ladderBody = document.getElementById('ladderBody');
+            var ladderEmpty = document.getElementById('ladderEmpty');
+            var filterName = document.getElementById('filterName');
+            var btnClearRank = document.getElementById('btnClearRank');
+            var toast = document.getElementById('toast');
+            var statBest = document.getElementById('statBest');
+            var statAvg = document.getElementById('statAvg');
+            var statRank = document.getElementById('statRank');
+            var historyChart = document.getElementById('historyChart');
+
+            // ===== Test state =====
+            var state = 'idle';      // idle | waiting | go | fail
+            var times = [];
+            var currentRound = 0;
+            var waitingTimer = null;
+            var startTs = 0;
+
+            function showToast(msg) {
+                toast.textContent = msg;
+                toast.classList.add('show');
+                clearTimeout(showToast._t);
+                showToast._t = setTimeout(function () {
+                    toast.classList.remove('show');
+                }, 2200);
+            }
+
+            function renderRounds() {
+                roundsEl.innerHTML = '';
+                for (var i = 0; i < ROUNDS; i++) {
+                    var d = document.createElement('div');
+                    d.className = 'round-dot';
+                    if (i < currentRound) {
+                        d.classList.add(times[i] != null ? 'done' : 'failed');
+                        d.textContent = times[i] != null ? Math.round(times[i]) : '✕';
+                    } else if (i === currentRound && (state === 'waiting' || state === 'go')) {
+                        d.classList.add('active');
+                        d.textContent = '…';
+                    } else {
+                        d.textContent = i + 1;
+                    }
+                    roundsEl.appendChild(d);
+                }
+            }
+
+            function setState(s) {
+                state = s;
+                testArea.className = 'test-area ' + s;
+                if (s === 'waiting') {
+                    testArea.querySelector('h3').textContent = '等待…';
+                    testArea.querySelector('p').textContent = '保持专注，随时会变绿！';
+                    testArea.querySelector('.click-hint').textContent = '看到绿色立即点击';
+                } else if (s === 'go') {
+                    testArea.querySelector('h3').textContent = '点击！';
+                    testArea.querySelector('p').textContent = '就是现在！';
+                    testArea.querySelector('.click-hint').textContent = '⚡ 立即点击';
+                } else if (s === 'fail') {
+                    testArea.querySelector('h3').textContent = '过早点击！';
+                    testArea.querySelector('p').textContent = '请等待绿色出现后再点击';
+                    testArea.querySelector('.click-hint').textContent = '本轮自动重试';
+                } else {
+                    testArea.querySelector('h3').textContent = '准备测试';
+                    testArea.querySelector('p').textContent = '点击下方「开始测试」，屏幕变绿后以最快速度点击屏幕。';
+                    testArea.querySelector('.click-hint').textContent = '🖱️ 等待绿色出现再点击，提前点击将被判为失败';
+                }
+            }
+
+            function startTest() {
+                times = [];
+                currentRound = 0;
+                resultBanner.classList.remove('show');
+                btnStart.disabled = true;
+                btnReset.disabled = false;
+                nextRound();
+            }
+
+            function nextRound() {
+                if (currentRound >= ROUNDS) {
+                    finishTest();
+                    return;
+                }
+                var delay = 1000 + Math.random() * 3000;
+                setState('waiting');
+                renderRounds();
+                waitingTimer = setTimeout(function () {
+                    if (state !== 'waiting') return;
+                    startTs = performance.now();
+                    setState('go');
+                    renderRounds();
+                }, delay);
+            }
+
+            function onAreaClick(e) {
+                if (state === 'go') {
+                    var ms = performance.now() - startTs;
+                    times[currentRound] = ms;
+                    currentRound++;
+                    setTimeout(nextRound, 350);
+                } else if (state === 'waiting') {
+                    clearTimeout(waitingTimer);
+                    times[currentRound] = null; // failed
+                    setState('fail');
+                    renderRounds();
+                    setTimeout(function () {
+                        if (state === 'fail') nextRound();
+                    }, 800);
+                }
+            }
+
+            function finishTest() {
+                var valid = times.filter(function (t) { return t != null; });
+                var avg = valid.length
+                    ? valid.reduce(function (a, b) { return a + b; }, 0) / valid.length
+                    : null;
+                var best = valid.length ? Math.min.apply(null, valid) : null;
+
+                setState('idle');
+                renderRounds();
+                btnStart.disabled = false;
+
+                if (avg == null) {
+                    showToast('本轮测试全部失败，请重新开始');
+                    return;
+                }
+
+                var b = badgeOf(avg);
+                resultAvg.textContent = Math.round(avg) + ' ms';
+                resultDetail.textContent = '5 轮平均 · 最快 ' + Math.round(best) + ' ms · 完成时间 ' +
+                    new Date().toLocaleString('zh-CN');
+                resultBadge.textContent = b.text;
+                resultBadge.className = 'badge ' + b.cls;
+                resultBanner.classList.add('show');
+
+                // history
+                var hist = getHistory();
+                hist.push({ t: Date.now(), v: Math.round(avg) });
+                saveHistory(hist);
+
+                // best
+                var curBest = parseFloat(localStorage.getItem(BEST_KEY) || 'Infinity');
+                if (avg < curBest) {
+                    localStorage.setItem(BEST_KEY, String(Math.round(avg)));
+                    showToast('🎉 新纪录：' + Math.round(avg) + ' ms！');
+                }
+
+                updateStats();
+                drawHistory();
+            }
+
+            // ===== Stats & history =====
+            function updateStats() {
+                var best = localStorage.getItem(BEST_KEY);
+                statBest.textContent = best ? best + ' ms' : '--';
+                var hist = getHistory();
+                if (hist.length) {
+                    var s = 0;
+                    for (var i = 0; i < hist.length; i++) s += hist[i].v;
+                    statAvg.textContent = Math.round(s / hist.length) + ' ms';
+                } else {
+                    statAvg.textContent = '--';
+                }
+                statRank.textContent = best ? tierOf(parseFloat(best)).name : '--';
+            }
+
+            function drawHistory() {
+                var ctx = historyChart.getContext('2d');
+                var dpr = window.devicePixelRatio || 1;
+                var w = historyChart.clientWidth || 320;
+                var h = 150;
+                historyChart.width = w * dpr;
+                historyChart.height = h * dpr;
+                ctx.scale(dpr, dpr);
+
+                var hist = getHistory();
+                ctx.clearRect(0, 0, w, h);
+
+                if (hist.length < 1) {
+                    ctx.fillStyle = '#93a4c0';
+                    ctx.font = '13px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('完成测试后显示成绩走势', w / 2, h / 2 + 4);
+                    return;
+                }
+
+                var vals = hist.slice(-20).map(function (x) { return x.v; });
+                var min = Math.min.apply(null, vals);
+                var max = Math.max.apply(null, vals);
+                var range = Math.max(max - min, 40);
+                var pad = 16;
+
+                // grid lines
+                ctx.strokeStyle = '#243149';
+                ctx.lineWidth = 1;
+                for (var g = 0; g <= 4; g++) {
+                    var gy = pad + (h - pad * 2) * g / 4;
+                    ctx.beginPath();
+                    ctx.moveTo(0, gy);
+                    ctx.lineTo(w, gy);
+                    ctx.stroke();
+                }
+
+                var n = vals.length;
+                var step = n > 1 ? (w - pad * 2) / (n - 1) : 0;
+
+                // area
+                ctx.beginPath();
+                ctx.moveTo(pad, h - pad);
+                for (var j = 0; j < n; j++) {
+                    var x = pad + step * j;
+                    var y = pad + (h - pad * 2) * (vals[j] - min) / range;
+                    ctx.lineTo(x, y);
+                }
+                ctx.lineTo(pad + step * (n - 1), h - pad);
+                ctx.closePath();
+                var grad = ctx.createLinearGradient(0, pad, 0, h - pad);
+                grad.addColorStop(0, 'rgba(0,229,255,.35)');
+                grad.addColorStop(1, 'rgba(0,229,255,0)');
+                ctx.fillStyle = grad;
+                ctx.fill();
+
+                // line
+                ctx.beginPath();
+                for (var k = 0; k < n; k++) {
+                    var lx = pad + step * k;
+                    var ly = pad + (h - pad * 2) * (vals[k] - min) / range;
+                    if (k === 0) ctx.moveTo(lx, ly);
+                    else ctx.lineTo(lx, ly);
+                }
+                ctx.strokeStyle = '#00e5ff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // points
+                for (var m = 0; m < n; m++) {
+                    var px = pad + step * m;
+                    var py = pad + (h - pad * 2) * (vals[m] - min) / range;
+                    ctx.beginPath();
+                    ctx.arc(px, py, 3, 0, Math.PI * 2);
+                    ctx.fillStyle = '#00e5ff';
+                    ctx.fill();
+                }
+            }
+
+            // ===== Ladder =====
+            function renderLadder() {
+                var list = getLadder().slice().sort(function (a, b) { return a.v - b.v; });
+                var kw = (filterName.value || '').trim().toLowerCase();
+                if (kw) {
+                    list = list.filter(function (x) {
+                        return (x.n || '').toLowerCase().indexOf(kw) !== -1;
+                    });
+                }
+
+                ladderBody.innerHTML = '';
+                ladderEmpty.style.display = list.length ? 'none' : 'block';
+
+                var meKey = null;
+                try { meKey = localStorage.getItem('gameplay_me'); } catch (e) { }
+
+                list.forEach(function (item, idx) {
+                    var tr = document.createElement('tr');
+                    var t = tierOf(item.v);
+                    if (meKey && item.key === meKey) tr.classList.add('me');
+
+                    var rankTd = document.createElement('td');
+                    rankTd.className = 'rank' + (idx < 3 ? ' rank-' + (idx + 1) : '');
+                    rankTd.textContent = (idx + 1) === 1 ? '🥇' : (idx + 1) === 2 ? '🥈' : (idx + 1) === 3 ? '🥉' : (idx + 1);
+
+                    var nameTd = document.createElement('td');
+                    nameTd.textContent = item.n || '匿名玩家';
+
+                    var valTd = document.createElement('td');
+                    valTd.textContent = Math.round(item.v) + ' ms';
+
+                    var tierTd = document.createElement('td');
+                    tierTd.innerHTML = '<span style="color:' + t.color + ';font-weight:700;">' + t.name + '</span>';
+
+                    tr.appendChild(rankTd);
+                    tr.appendChild(nameTd);
+                    tr.appendChild(valTd);
+                    tr.appendChild(tierTd);
+                    ladderBody.appendChild(tr);
+                });
+            }
+
+            function submitScore() {
+                var avgText = resultAvg.textContent;
+                var m = avgText.match(/(\d+)\s*ms/);
+                if (!m) {
+                    showToast('请先完成一次反应测试');
+                    return;
+                }
+                var v = parseInt(m[1], 10);
+                var name = (nickname.value || '').trim() || '匿名玩家';
+                if (name.length > 16) name = name.slice(0, 16);
+
+                var key = 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+                var list = getLadder();
+                list.push({ key: key, n: name, v: v, t: Date.now() });
+                saveLadder(list);
+                localStorage.setItem('gameplay_me', key);
+                showToast('✅ 成绩已提交到天梯');
+                renderLadder();
+            }
+
+            function clearRank() {
+                if (!confirm('确定清空本地天梯榜单吗？此操作不可恢复。')) return;
+                saveLadder([]);
+                localStorage.removeItem('gameplay_me');
+                renderLadder();
+                showToast('已清空本地榜单');
+            }
+
+            // ===== Events =====
+            testArea.addEventListener('click', onAreaClick);
+            btnStart.addEventListener('click', startTest);
+            btnReset.addEventListener('click', function () {
+                clearTimeout(waitingTimer);
+                times = [];
+                currentRound = 0;
+                setState('idle');
+                renderRounds();
+                btnStart.disabled = false;
+                btnReset.disabled = true;
+                resultBanner.classList.remove('show');
+            });
+            btnSubmit.addEventListener('click', submitScore);
+            btnClearRank.addEventListener('click', clearRank);
+            filterName.addEventListener('input', renderLadder);
+            nickname.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') submitScore();
+            });
+
+            window.addEventListener('resize', drawHistory);
+
+            // ===== Init =====
+            renderRounds();
+            updateStats();
+            drawHistory();
+            renderLadder();
+        })();
+    </script>
+</body>
+
+</html>
